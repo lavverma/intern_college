@@ -11,8 +11,8 @@ const collegeSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required:"Enter last fullName",
-        trim: true,
-        unique:true
+        trim: true
+       
     },
 
     logoLink: {
