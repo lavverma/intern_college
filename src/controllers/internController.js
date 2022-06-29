@@ -16,17 +16,6 @@ let createIntern = async function (req, res) {
         }
 
         
-        if (!validator.valid(collegeName)) {
-            return res.status(400).send({ status: false, message: "enter the college name" });
-        }
-        let collegeDetails = await collegeModel.findOne({ name: collegeName })
-        
-        if ( !collegeDetails ) {
-            return res.status(404).send({ status: false, message: "college does not exist" })
-        }
-        collegeId = collegeDetails._id;
-
-
         if (!validator.valid(name)) {           //0 length or not null or undefined
             return res.status(400).send({ status: false, message: "Please provide intern name..." })
         }
@@ -58,6 +47,16 @@ let createIntern = async function (req, res) {
         if (checkMobile) {
             return res.status(400).send({ status: false, message: "mobile number is already present" })
         }
+
+        if (!validator.valid(collegeName)) {
+            return res.status(400).send({ status: false, message: "enter the college name" });
+        }
+        let collegeDetails = await collegeModel.findOne({ name: collegeName })
+        
+        if ( !collegeDetails ) {
+            return res.status(404).send({ status: false, message: "college does not exist" })
+        }
+        collegeId = collegeDetails._id;
 
        const data1 = { name, email, mobile, collegeId }
 
