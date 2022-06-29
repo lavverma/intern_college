@@ -31,7 +31,7 @@ let createIntern = async function (req, res) {
         if (!validator.isvalidEmail(email)) {
             return res.status(400).send({ status: false, message: "Please enter the valid email..." })
         }
-        checkEmail = await internModel.findOne({ email: email })
+        let checkEmail = await internModel.findOne({ email: email })
         if (checkEmail) {
             return res.status(400).send({ status: false, message: "email already exist" })
         }
@@ -43,7 +43,7 @@ let createIntern = async function (req, res) {
         if (!validator.moblieRegex(mobile)) {
             return res.status(400).send({ status: false, message: "please enter the valid mobile number" })
         }
-        checkMobile = await internModel.findOne({ mobile: mobile })
+        let checkMobile = await internModel.findOne({ mobile: mobile })
         if (checkMobile) {
             return res.status(400).send({ status: false, message: "mobile number is already present" })
         }
