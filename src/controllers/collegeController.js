@@ -1,78 +1,59 @@
 const collegeModel = require("../models/collegeModel");
-const mongoose = require('mongoose');
+const validator = require("../validator/validator")
 
 
+let createCollege = async function (req, res) {
+  try {
 
 
-const isValidRequestBody = function (requestBody) {
-    return Object.keys(requestBody).length > 0
-}
+    const requestBody = req.body;
+    const { name, fullName, logoLink } = requestBody;
 
-const valid = function (value) {
-   
-  if(typeof (value) ==='undefined'|| value ===null ) return false
-  if(typeof (value) !== "string") return false 
-  if (typeof (value) === "string" && value.trim().length == 0)  return false 
+    if (!validator.isValidRequestBody(requestBody)) {
+      return res.status(400).send({ status: false, message: 'plz provide College details to create college data...' })
 
-  return true   //jo bhi input aa rha h wo string ke form me aayega
-}
+    }
 
-let isValid = function (attribute) {
-  return (/^[a-zA-Z]{2,20}$/.test(attribute.trim()))
-}
-
-let createCollege = async function(req, res){
-try{
-  const requestBody = req.body;
-  const {name,fullName, LogoLink, isDeleted} =requestBody;
-
-  if(!isValidRequestBody(requestBody)){
-    return  res.status(400).send({status:false,message:'invalid request parameters.plz provide College details...'})
-      
-  }
-
-  if(!valid(name)){
-    res.status(400).send({status:false,message:'College Name is required'})
-    return
- }
-
-   if(!isValid(name)) {
-    res.status(400).send({status:false,message:' Enter College Name in proper format'}) 
-   }
-
-   checkName = await collegeModel.findOne({name:name})
-   if(checkName){
-      return res.status(400).send({status:false, message:"College name already exist"})
-   }
-
-  if(!valid(fullName)){
-      res.status(400).send({status:false,message:'Fullname of College is required...'})
+    if (!validator.valid(name)) {
+      res.status(400).send({ status: false, message: 'Please Enter the Short Name of college.' })
       return
+    }
+
+    if (!validator.isREgexName(name)) {
+      return res.status(400).send({ status: false, message: ' Enter College Short Name in valid format' })
+    }
+
+    checkName = await collegeModel.findOne({ name: name })
+    if (checkName) {
+      return res.status(400).send({ status: false, message: "College short name already exist" })
+    }
+
+    if (!validator.valid(fullName)) {
+      return res.status(400).send({ status: false, message: 'please enter  Fullname of College...' })
+
+    }
+
+    if (!validator.regexFullname(fullName)) {
+      return res.status(400).send({ status: false, message: ' Enter fullName in proper format' })
+    }
+
+    if (!validator.valid(logoLink)) {
+      return res.status(400).send({ status: false, message: "please enter a logolink..." })
+    }
+
+    let regexUrl = /^(http(s)?:\/\/)?(www.)?([a-zA-Z0-9])+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/[^\s]*)?$/gm
+    if (!regexUrl.test(logoLink.trim())) {
+      return res.status(400).send({ status: false, message: "Provide valid url logolink in request..." })
+    }
+
+    saveCollege = await collegeModel.create(requestBody)
+    res.status(201).send({ status: true, data: saveCollege })
+
+
+  } catch (err) {
+    return res.status(500).send({ status: false, message: err.message })
   }
- 
 
-  if(!valid(LogoLink)){
-    res.status(400).send({status:false, message:"valid format url is required..."})
-  }
-  
-  // if(!(/^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*\.(?:jpg|gif|png)*)?\/?$/.test(LogoLink))){
-  //   return res.status(400).send({status:false, message:"Provide Proper url in request..."})
-  // }
-
-  checkLogo = await collegeModel.findOne({logoLink:LogoLink})
-   if(checkLogo){
-      return res.status(400).send({status:false, message:"LogoLink already exist"})
-   }
-  
-
-  saveCollege = await collegeModel.create(requestBody)
-  res.status(201).send({status:true, data: saveCollege})
-
-
-}catch(err){
-  res.status(500).send({status:false, message:err.message })
-}
-  
 
 }
-module.exports.createCollege =createCollege
+module.exports.createCollege = createCollege
