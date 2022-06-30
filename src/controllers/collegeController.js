@@ -6,7 +6,7 @@ let createCollege = async function (req, res) {
   try {
 
     const requestBody = req.body;
-    const { name, fullName, logoLink } = requestBody;
+    const { name, fullName, logoLink,isDeleted } = requestBody;
 
     if (!validator.isValidRequestBody(requestBody)) { return res.status(400).send({ status: false, message: 'plz provide College details to create college data...' }) }
 
@@ -25,6 +25,10 @@ let createCollege = async function (req, res) {
 
     let regexUrl = /^(http(s)?:\/\/)?(www.)?([a-zA-Z0-9])+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/[^\s]*)?$/gm
     if (!regexUrl.test(logoLink.trim())) { return res.status(400).send({ status: false, message: "Provide valid url logolink in request..." }) }
+
+    if( isDeleted && ( isDeleted !=  (true || false)) ){
+      return res.status(400).send({status:false, message:"please enter Boolean value..."})
+  }
 
     let saveCollege = await collegeModel.create(requestBody)
     return res.status(201).send({ status: true, data: saveCollege })
