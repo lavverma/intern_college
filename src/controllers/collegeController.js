@@ -15,17 +15,17 @@ let createCollege = async function (req, res) {
     }
 
     if (!validator.valid(name)) {
-      res.status(400).send({ status: false, message: 'Please Enter the Short Name of college.' })
+      res.status(400).send({ status: false, message: 'Please Enter the Short Name of college...' })
       return
     }
 
     if (!validator.isREgexName(name)) {
-      return res.status(400).send({ status: false, message: ' Enter College Short Name in valid format' })
+      return res.status(400).send({ status: false, message: ' Enter College Short Name in valid format...' })
     }
 
     let checkName = await collegeModel.findOne({ name: name })
     if (checkName) {
-      return res.status(400).send({ status: false, message: "College short name already exist" })
+      return res.status(400).send({ status: false, message: "College short name already exist..." })
     }
 
     if (!validator.valid(fullName)) {
@@ -34,7 +34,7 @@ let createCollege = async function (req, res) {
     }
 
     if (!validator.regexFullname(fullName)) {
-      return res.status(400).send({ status: false, message: ' Enter fullName in proper format' })
+      return res.status(400).send({ status: false, message: ' Enter fullName in proper format...' })
     }
 
     if (!validator.valid(logoLink)) {
