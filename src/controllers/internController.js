@@ -9,35 +9,28 @@ let createIntern = async function (req, res) {
         let data = req.body;
         const { name, email, mobile, collegeName,isDeleted} = data
 
-        if (!validator.isValidRequestBody(data)) { return res.status(400).send({ status: false, message: "Please provide data in intern body..." }) } //nothing in body
+        if (!validator.isValidRequestBody(data))  return res.status(400).send({ status: false, message: "Please provide data in intern body..." })  //nothing in body
 
-        if (!validator.valid(name)) { return res.status(400).send({ status: false, message: "Please provide intern name..." }) } //0 length or not null or undefined
+        if (!validator.valid(name) || !validator.regexIntern(name))  return res.status(400).send({ status: false, message: "Please provide the intern name in valid format..." })  //valid format of name check
 
-        if (!validator.regexIntern(name)) { return res.status(400).send({ status: false, message: "Please enter the valid intern name..." }) } //valid format of name check
-
-        if (!validator.valid(email)) {
-            return res.status(400).send({ status: false, message: "Please enter the email..." })
-        }
-        if (!validator.isvalidEmail(email)) {
-            return res.status(400).send({ status: false, message: "Please enter the valid email..." })
-        }
+        if (!validator.valid(email) || !validator.isvalidEmail(email))  return res.status(400).send({ status: false, message: "Please provide the email in a valid format..." })
+        
         let checkEmail = await internModel.findOne({ email: email })
-        if (checkEmail) { return res.status(400).send({ status: false, message: "email already exist..." }) }
+        if (checkEmail)  return res.status(400).send({ status: false, message: `email: ${email} already exist...` }) 
 
-        if (!validator.valid(mobile)) { return res.status(400).send({ status: false, message: "Please enter the mobile number... " }); }
-        if (!validator.moblieRegex(mobile)) { return res.status(400).send({ status: false, message: "please enter the valid mobile number..." }) }
+        if (!validator.valid(mobile) || !validator.moblieRegex(mobile)) return res.status(400).send({ status: false, message: "please provide the mobile number inn valid format..." }) 
 
         let checkMobile = await internModel.findOne({ mobile: mobile })
-        if (checkMobile) { return res.status(400).send({ status: false, message: "mobile number is already present..." }) }
+        if (checkMobile)  return res.status(400).send({ status: false, message: `mobile no.: ${mobile} is already present...` })
 
-        if (!validator.valid(collegeName)) { return res.status(400).send({ status: false, message: "enter the college name..." }) }
+        if (!validator.valid(collegeName))  return res.status(400).send({ status: false, message: "enter the college name..." }) 
 
         let collegeDetails = await collegeModel.findOne({ name: collegeName })
 
-        if (!collegeDetails) { return res.status(404).send({ status: false, message: "college does not exist..." }) }
-        if( isDeleted && ( isDeleted !=  (true || false)) ){
-            return res.status(400).send({status:false, message:"please enter Boolean value..."})
-        }
+        if (!collegeDetails)  return res.status(404).send({ status: false, message: `college: ${collegeName} does not exist...` }) 
+
+        if( isDeleted && ( isDeleted !=  (true || false)) ) return res.status(400).send({status:false, message:"please enter Boolean value..."})
+        
 
         let collegeId = collegeDetails._id;
 
@@ -55,13 +48,12 @@ let getInternByCollege = async function (req, res) {
     try {
         let collegeName = req.query.collegeName;
 
-        if (!validator.valid(collegeName) || !collegeName || !validator.isREgexName(collegeName)) {
-            return res.status(400).send({ status: false, message: "Please enter college shortname with correct format..." })
-        }
+        if (!validator.valid(collegeName) || !collegeName || !validator.isREgexName(collegeName)) 
+            return res.status(400).send({ status: false, message: "Please provide college shortname with correct format..." })
 
         const dataTobePresented = await collegeModel.findOne({ name: collegeName,isDeleted:false })
 
-        if (!dataTobePresented) { return res.status(404).send({ status: false, message: "this college not found..." }) }
+        if (!dataTobePresented)  return res.status(404).send({ status: false, message: `college: ${collegeName} not found...` }) 
 
         let collegeId = dataTobePresented._id
 
