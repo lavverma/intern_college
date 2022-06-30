@@ -23,7 +23,7 @@ let createCollege = async function (req, res) {
       return res.status(400).send({ status: false, message: ' Enter College Short Name in valid format' })
     }
 
-    checkName = await collegeModel.findOne({ name: name })
+    let checkName = await collegeModel.findOne({ name: name })
     if (checkName) {
       return res.status(400).send({ status: false, message: "College short name already exist" })
     }
@@ -46,7 +46,7 @@ let createCollege = async function (req, res) {
       return res.status(400).send({ status: false, message: "Provide valid url logolink in request..." })
     }
 
-    saveCollege = await collegeModel.create(requestBody)
+    let saveCollege = await collegeModel.create(requestBody)
     res.status(201).send({ status: true, data: saveCollege })
 
 
