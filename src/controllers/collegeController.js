@@ -1,7 +1,7 @@
 const collegeModel = require("../models/collegeModel");
 const validator = require("../validator/validator")
 
-
+// handler of post type api: creating colleges collection
 let createCollege = async function (req, res) {
   try {
 

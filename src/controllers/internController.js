@@ -2,7 +2,7 @@ const internModel = require("../models/internModel");
 const collegeModel = require("../models/collegeModel")
 const validator = require("../validator/validator")
 
-
+// handler of post api: creating collection of interns
 let createIntern = async function (req, res) {
     try {
 
@@ -43,7 +43,7 @@ let createIntern = async function (req, res) {
 }
 
 
-
+// handler of get type api: fetching data from DB
 let getInternByCollege = async function (req, res) {
     try {
         let collegeName = req.query.collegeName;
@@ -59,17 +59,6 @@ let getInternByCollege = async function (req, res) {
 
         let intern = await internModel.find({ collegeId: collegeId, isDeleted:false }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
 
-        // if (intern.length < 1) {
-        //     return res.status(200).send({
-        //         status: true,
-        //         data: {
-        //             name: dataTobePresented.name,
-        //             fullName: dataTobePresented.fullName,
-        //             logoLink: dataTobePresented.logoLink,
-        //             intern: { message: "no intern apllied in this college..." }
-        //         }
-        //     })
-        // }
 
         return res.status(200).send({
             status: true,

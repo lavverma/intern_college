@@ -31,7 +31,7 @@ const regexIntern = function (name) {
 }
 
 const isvalidEmail = function (gmail) {
-    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/   //.test(gmail);
+    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/   
     return regex.test(gmail)
 }
 
